@@ -1,0 +1,17 @@
+{
+  "name": "recombee-uploader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.32.0",
+    "recombee-api-client": "^4.1.2",
+    "uuid": "^9.0.0"
+  }
+}
