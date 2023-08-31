@@ -43,6 +43,8 @@ export default function Signup() {
       toast.error("Passwords do not match")
       return
     }
+
+    /*
     let redirect_url = ""
 
     if (process.env.NEXT_PUBLIC_ENVIRONMENT != "development") {
@@ -51,29 +53,35 @@ export default function Signup() {
       redirect_url = "http://localhost:3000"
     }
     redirect_url += "/api/auth/callback"
-
-
-
+    */
 
     let users = await supabase.from("users").select();
     let emailExist: User[] = (users.data ?? []).filter((user: User) => user.email === email);
 
+    //await supabase.from("ecommerce_users").insert({name, onboarding_complete: true})
+    
     const res = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: redirect_url,
+        //emailRedirectTo: redirect_url,
+        emailRedirectTo: "https://www.google.com",
       },
     })
-
-
+    
     if (res.error) {
       const error = res.error
       if (error.name == "AuthApiError") {
         toast.error(error.message)
         return
+      } else {
+        toast.error(JSON.stringify(error))
       }
-    } else if (emailExist?.length) {
+    } else {
+      await supabase.from("ecommerce_users").insert({id: res.data?.user?.id})
+    }
+    
+    if (emailExist?.length) {
       setId(emailExist[0]?.id);
       setIdEcom(res?.data?.user?.id);
       setShowLinkingModal(true);
@@ -91,7 +99,7 @@ export default function Signup() {
         .eq('id', idEcom);
 
       if (!(ecommerce_user?.data ?? []).length) {
-        toast.error("Accounts was not found");
+        toast.error("Chrome extension account was not found");
       } else {
         const { error } = await supabase
           .from('ecommerce_users')
